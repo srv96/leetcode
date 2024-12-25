@@ -1,0 +1,17 @@
+MedianFinder s = new MedianFinder();
+        String[] cmds = {"MedianFinder","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian","addNum","findMedian"};
+        int[][] vals = {{},{6},{},{10},{},{2},{},{6},{},{5},{},{0},{},{6},{},{3},{},{1},{},{0},{},{0},{}};
+        int size = cmds.length;
+        for(int i = 0 ; i < size ; i++){
+            if(cmds[i].equals("MedianFinder")){
+                s = new MedianFinder();
+                System.out.print("null ");
+            }
+            if(cmds[i].equals("addNum")){
+                s.addNum(vals[i][0]);
+                System.out.print("null ");
+            }
+            if(cmds[i].equals("findMedian")){
+                System.out.print(s.findMedian()+" ");
+            }
+        }

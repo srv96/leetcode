@@ -1,0 +1,85 @@
+CREATE TABLE employee (id NUMBER, name varchar(20), salary int, departmentId int);
+CREATE TABLE Department (id INT, name VARCHAR(255));
+
+INSERT INTO employee (id, name, salary, departmentId) VALUES (1, 'Joe', 70000, 1);
+INSERT INTO employee (id, name, salary, departmentId) VALUES (2, 'Jim', 90000, 1);
+INSERT INTO employee (id, name, salary, departmentId) VALUES (3, 'Henry', 80000, 2);
+INSERT INTO employee (id, name, salary, departmentId) VALUES (4, 'Sam', 60000, 2);
+INSERT INTO employee (id, name, salary, departmentId) VALUES (5, 'Max', 90000, 1);
+INSERT INTO department (id, name) VALUES (1, 'IT');
+INSERT INTO department (id, name) VALUES (2, 'Sales');
+COMMIT ;
+
+DELETE FROM employee;
+DELETE FROM department;
+COMMIT ;
+
+select  * from DEPARTMENT;
+
+-- ***************************************************************************
+-- SCRETCH
+
+select join_t.department as Department , join_t.name as Employee, join_t.salary as Salary
+from (select d.name department, e.name name, e.salary salary
+      from DEPARTMENT d
+               inner join employee e on d.id = e.departmentId) join_t
+where salary in ((select max(salary)
+                 from (select d.name department, e.name name, e.salary salary
+                       from DEPARTMENT d
+                                inner join employee e on d.id = e.departmentId) join_t group by join_t.department));
+
+select d.name department, e.name name, e.salary salary
+from DEPARTMENT d
+         inner join employee e on d.id = e.departmentId;
+
+select a.department as Department , a.name as Employee, a.salary as Salary
+from (select d.name department, e.name name, e.salary salary
+      from DEPARTMENT d
+               inner join employee e on d.id = e.departmentId) a
+         inner join (select join_t2.department, max(join_t2.salary) as max_s
+                     from (select d.name department, e.name name, e.salary salary
+                           from DEPARTMENT d
+                                    inner join employee e on d.id = e.departmentId) join_t2
+                     group by join_t2.department) b on a.salary = b.max_s;
+
+
+
+select d.name department, e.name name, e.salary salary
+from DEPARTMENT d
+         inner join employee e on d.id = e.departmentId;
+
+select join_t2.department , max(join_t2.salary)
+from (select d.name department, e.salary salary
+      from DEPARTMENT d
+               inner join employee e on d.id = e.departmentId) join_t2 group by join_t2.department ;
+
+
+-- ***************************************************************************
+--ANSWER
+
+select a.department as Department, a.name as Employee, a.salary as Salary
+from (select d.name department, e.name name, e.salary salary
+      from DEPARTMENT d
+               inner join employee e on d.id = e.departmentId) a
+         inner join (select join_t2.department, max(join_t2.salary) as salary
+                     from (select d.name department, e.salary salary
+                           from DEPARTMENT d
+                                    inner join employee e on d.id = e.departmentId) join_t2
+                     group by join_t2.department) b on a.department = b.department and a.salary=b.salary;
+
+--OPTIMISED
+
+WITH DepartmentEmployee AS (
+    SELECT d.name AS department, e.name AS employee, e.salary
+    FROM DEPARTMENT d
+             INNER JOIN employee e ON d.id = e.departmentId
+)
+select a.department as Department, a.employee as Employee, a.salary as Salary
+from (DepartmentEmployee) a inner join (select join_t2.department, max(join_t2.salary) as salary
+                     from (DepartmentEmployee) join_t2
+                     group by join_t2.department) b on a.department = b.department and a.salary=b.salary;
+
+
+
+
+

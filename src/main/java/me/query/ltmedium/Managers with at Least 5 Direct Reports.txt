@@ -1,0 +1,48 @@
+DROP TABLE employees;
+
+CREATE TABLE employees (
+                           id INT,
+                           name VARCHAR(255),
+                           department VARCHAR(255),
+                           managerId INT
+);
+
+INSERT INTO employees (id, name, department, managerId) VALUES (101, 'John', 'A', NULL);
+INSERT INTO employees (id, name, department, managerId) VALUES (102, 'Dan', 'A', 101);
+INSERT INTO employees (id, name, department, managerId) VALUES (103, 'James', 'A', 101);
+INSERT INTO employees (id, name, department, managerId) VALUES (104, 'Amy', 'A', 101);
+INSERT INTO employees (id, name, department, managerId) VALUES (105, 'Anne', 'A', 101);
+INSERT INTO employees (id, name, department, managerId) VALUES (106, 'Ron', 'B', 101);
+
+
+
+with empmgrtbl as (select b.id id, b.name name, b.department department, a.id managerId
+                   from employees a
+                            inner join employees b on a.id = b.managerId)
+        ,
+     directCount as (select managerId, count(id) as directs
+                     from (select b.id id, b.name name, b.department department, a.id managerId
+                           from employees a
+                                    inner join employees b on a.id = b.managerId) empmgrtbl
+                     group by managerId)
+
+
+select name
+from employees
+         inner join (select managerId, count(id) as directs
+                     from (select b.id id, b.name name, b.department department, a.id managerId
+                           from employees a
+                                    inner join employees b on a.id = b.managerId) empmgrtbl
+                     group by managerId) directCount on employees.id = directCount.managerId
+where directCount.directs >= 5;
+
+select name from EMPLOYEES where id in (select managerID from EMPLOYEES group by managerId having count(*)>=5);
+
+
+
+
+
+
+
+
+

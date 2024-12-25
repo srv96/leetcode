@@ -1,0 +1,28 @@
+CREATE TABLE Enrollments
+(
+    student_id INT,
+    course_id  INT,
+    grade      INT
+);
+
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (2, 2, 95);
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (2, 3, 95);
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (1, 1, 90);
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (1, 2, 99);
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (3, 1, 80);
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (3, 2, 75);
+INSERT INTO Enrollments (student_id, course_id, grade) VALUES (3, 3, 82);
+
+
+select *
+from Enrollments;
+select student_id, course_id, grade, RANK() over (PARTITION BY student_id order by grade desc) s_rnk from Enrollments;
+
+with student_course_rank AS (select student_id,
+                                    course_id,
+                                    grade,
+                                    RANK() over (PARTITION BY student_id order by grade desc, course_id) s_rnk
+                             from Enrollments)
+select student_id, course_id, grade
+from student_course_rank
+where s_rnk = 1;

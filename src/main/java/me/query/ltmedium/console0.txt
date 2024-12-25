@@ -1,0 +1,52 @@
+
+DELETE FROM employee;
+COMMIT;
+INSERT INTO employee (id, salary) VALUES (1, 100);
+INSERT INTO employee (id, salary) VALUES (2, 200);
+INSERT INTO employee (id, salary) VALUES (3, 300);
+COMMIT;
+
+DELETE FROM employee;
+INSERT INTO employee (id, salary) VALUES (1, 100);
+INSERT INTO employee (id, salary) VALUES (2, 100);
+COMMIT;
+
+DROP TABLE EMPLOYEE;
+CREATE TABLE employee ( id NUMBER, salary NUMBER );
+
+
+SELECT *FROM SYSTEM.EMPLOYEE;
+-- ***************************************************************************
+
+SELECT SALARY FROM (SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rank FROM Employee) rank_table where rank_table.rank=2;
+
+CREATE FUNCTION getNthHighestSalary(N IN NUMBER) RETURN NUMBER IS
+    result NUMBER;
+BEGIN
+    SELECT salary
+    INTO result
+    FROM (
+             SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rank
+             FROM Employee
+         ) rank_table
+    WHERE rank_table.rank = N;
+
+    RETURN result;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN NULL; -- Return NULL if no salary is found for the given rank
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
