@@ -1,32 +1,34 @@
 package me.coding.leetcode.code;
 
-import me.coding.ds.list.NestedInteger;
-
+import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
-    public int depthSumInverse(List<NestedInteger> nestedList) {
-        int maxDepth = getDepth(nestedList, 0);
-        return invSum(nestedList, maxDepth);
-    }
-
-    private int getDepth(List<NestedInteger> nestedList, int depth) {
-        int maxDepth = depth + 1;
-        for (NestedInteger integer : nestedList) {
-            if (!integer.isInteger()) {
-                maxDepth = Math.max(maxDepth, getDepth(integer.getList(), depth + 1));
-            }
+    public String stringHash(String s, int k) {
+        List<String> subStr = getSubString(s, k);
+        StringBuilder sb = new StringBuilder();
+        for (String str : subStr) {
+            sb.append(getHash(str));
         }
-        return maxDepth;
+        return sb.toString();
     }
 
-    private int invSum(List<NestedInteger> nestedList, int depth) {
-        int size = nestedList.size();
-        int sum = 0;
-        for (NestedInteger integer : nestedList) {
-            sum += integer.isInteger() ? integer.getInteger() * depth : invSum(integer.getList(), depth - 1);
+    private char getHash(String str) {
+        int len = str.length();
+        int hashValue = 0;
+        for (int i = 0; i < len; i++) {
+            hashValue += str.charAt(i) - 'a';
         }
-        return sum;
+        hashValue %= 26;
+        return (char) ((int) 'a' + hashValue);
     }
 
+    public List<String> getSubString(String s, int k) {
+        int size = s.length();
+        List<String> subStr = new ArrayList<>();
+        for (int i = 0; i < size; i += k) {
+            subStr.add(s.substring(i, Math.min(size, i + k)));
+        }
+        return subStr;
+    }
 }

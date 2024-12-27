@@ -1,31 +1,44 @@
 package me.coding.company.google;
 
-import me.coding.ds.list.ListNode;
-
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    public ListNode removeNodes(ListNode head) {
-        Stack<ListNode> monoStack = new Stack<>();
-        ListNode curr = head;
-        while(curr!=null){
-            if(monoStack.isEmpty() || monoStack.peek().val > curr.val){
-                monoStack.push(curr);
-            }else{
-                while(!monoStack.isEmpty() && monoStack.peek().val < curr.val){
-                    monoStack.pop();
+    List<String> result;
+
+    public List<String> validStrings(int n) {
+        result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        findAllString(sb, 0, n);
+        return result;
+    }
+
+    private void findAllString(StringBuilder sb, int i, int n) {
+        if (i == n) {
+            result.add(sb.toString());
+        } else {
+            if (i == 0) {
+                sb.append("0");
+                findAllString(sb, i + 1, n);
+                sb.deleteCharAt(0);
+                sb.append("1");
+                findAllString(sb, i + 1, n);
+                sb.deleteCharAt(0);
+            } else {
+                char ch = sb.charAt(sb.length() - 1);
+                if (ch == '0') {
+                    sb.append("1");
+                    findAllString(sb, i + 1, n);
+                    sb.deleteCharAt(i);
+                } else {
+                    sb.append("0");
+                    findAllString(sb, i + 1, n);
+                    sb.deleteCharAt(i);
+                    sb.append("1");
+                    findAllString(sb, i + 1, n);
+                    sb.deleteCharAt(i);
                 }
-                monoStack.push(curr);
             }
-            curr = curr.next;
         }
-        curr = monoStack.pop();
-        curr.next = null;
-        while(!monoStack.isEmpty()){
-            ListNode prev = monoStack.pop();
-            prev.next = curr;
-            curr = prev;
-        }
-        return curr;
     }
 }
