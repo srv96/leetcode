@@ -4,14 +4,10 @@ import java.io.*;
 
 class Singleton implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    // Static instance of the Singleton
     private static final Singleton instance = new Singleton();
 
-    // Private constructor to prevent instantiation
     private Singleton() {}
 
-    // Public method to provide the single instance
     public static Singleton getInstance() {
         return instance;
     }
@@ -20,17 +16,14 @@ class Singleton implements Serializable {
 class Singleton1 implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Volatile ensures thread-safety for lazy initialization
     private static volatile Singleton1 instance;
 
-    // Private constructor to prevent instantiation
     private Singleton1() {
         if (instance != null) {
             throw new IllegalStateException("Instance already exists");
         }
     }
 
-    // Public method to provide the single instance
     public static Singleton1 getInstance() {
         if (instance == null) {
             synchronized (Singleton1.class) {
@@ -42,7 +35,6 @@ class Singleton1 implements Serializable {
         return instance;
     }
 
-    // readResolve method to prevent creation of new instance during deserialization
     private Object readResolve() throws ObjectStreamException {
         return getInstance();
     }

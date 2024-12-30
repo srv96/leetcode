@@ -1,7 +1,7 @@
 package me.coding.sandbox;
 
 
-public class Solution {
+public class Solution10 {
     int count = 0 ;
 
     public void f1(){

@@ -7,8 +7,8 @@ import java.util.Map;
 public class CollectionSndBox {
     public static void main(String[] args) {
         // Create two separate Integer instances with the same value
-        Integer key1 = new Integer(10);
-        Integer key2 =  new Integer(10);
+        Integer key1 = Integer.valueOf(10);
+        Integer key2 = Integer.valueOf(10);
 
         // Create an IdentityHashMap
         Map<Integer, String> identityMap = new HashMap<>();
