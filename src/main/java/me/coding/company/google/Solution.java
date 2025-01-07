@@ -1,44 +1,37 @@
 package me.coding.company.google;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class Solution {
-    List<String> result;
+    public int maximumGap(int[] nums) {
+        int size = nums.length;
+        int min = Arrays.stream(nums).min().getAsInt();
+        int max = Arrays.stream(nums).max().getAsInt();
 
-    public List<String> validStrings(int n) {
-        result = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        findAllString(sb, 0, n);
-        return result;
+        List<Integer>[] lists = new List[size - 1];
+        for (int i = 0; i < size - 1; i++) {
+            lists[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < size; i++) {
+            System.out.print(nums[i]+" ");
+        }
+        System.out.println();
+        for (int i = 0; i < size; i++) {
+            int bucketNumber = getBucketNum(nums[i], min, max, size-2);
+            System.out.print(bucketNumber+" ");
+            lists[bucketNumber].add(nums[i]);
+        }
+        System.out.println("");
+        return 0;
     }
 
-    private void findAllString(StringBuilder sb, int i, int n) {
-        if (i == n) {
-            result.add(sb.toString());
-        } else {
-            if (i == 0) {
-                sb.append("0");
-                findAllString(sb, i + 1, n);
-                sb.deleteCharAt(0);
-                sb.append("1");
-                findAllString(sb, i + 1, n);
-                sb.deleteCharAt(0);
-            } else {
-                char ch = sb.charAt(sb.length() - 1);
-                if (ch == '0') {
-                    sb.append("1");
-                    findAllString(sb, i + 1, n);
-                    sb.deleteCharAt(i);
-                } else {
-                    sb.append("0");
-                    findAllString(sb, i + 1, n);
-                    sb.deleteCharAt(i);
-                    sb.append("1");
-                    findAllString(sb, i + 1, n);
-                    sb.deleteCharAt(i);
-                }
-            }
-        }
+    private int getBucketNum(int num, int min, int max, int numBucket) {
+        num -= min;
+        int range = max - min;
+        double subrange = (double)range / (double)numBucket;
+        num /=subrange;
+        return num;
     }
 }
